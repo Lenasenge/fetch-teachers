@@ -5,43 +5,33 @@ window.addEventListener("load", initApp); // When the page is loaded, run initAp
 // Function to initialize the Web App
 async function initApp() {
   console.log("initApp: app.js is running 🎉"); // Log to the console that the app is running
-  const teachers = await getTeachers();
-  console.log (teachers);
-  displayTeachers(teachers);
+  const teachers = await getTeachers(); // Call the getTeachers function
+  console.log(teachers); // Log the teachers to the console
+  displayTeachersGrid(teachers); // Call the displayTeachersGrid function
 }
 
 async function getTeachers() {
-  const response = await fetch("https://raw.githubusercontent.com/cederdorff/race/master/data/users.json"); //Fetch data from the API
-  const data = await response.json();
-  return data;
-}
-
-getTeachers(); //need this - calls the function so it shows up on the browser
-
-function displayTeachers(teachers) {
-  console.log(teachers);
-
-  const teachersList = document.querySelector("#teachers-list");
-  
-  for (const teacher of teachers) {
-    teachersList.insertAdjacentHTML("beforeend", `<li>${teacher.name}</li>`);
-  }
+  const response = await fetch(
+    "https://exam2semester.lenascreativestudio.com/wp-json/wp/v2/teacher?acf_format=standard"
+  ); // Fetch the data from the URL
+  const data = await response.json(); // Parse the data as JSON into readable JavaScript objects (array of objects)
+  return data; // Return the data
 }
 
 function displayTeachersGrid(teachers) {
   const teachersGrid = document.querySelector("#teachers-grid");
-}
 
-for (const teacher of teachers) {
-  teachersGrid.insertAdjacentHTML(
-    "beforeend",
-    /*html*/ `
-    <article class="grid-item">
-      <img src="${teacher.image}" alt="${teacher.name}" />
-      <h2>${teacher.name}</h2>
-      <p>${teacher.title}</p>
-    </article>
-  `
-  );
+  for (const teacher of teachers) {
+    teachersGrid.insertAdjacentHTML(
+      "beforeend",
+      /*html*/ `
+          <article class="grid-item">
+            <img src="${teacher.acf.image}" alt="${teacher.acf.name}" />
+            <h2>${teacher.acf.name}</h2>
+            <p>${teacher.acf.title}</p>
+            <a href="mailto:${teacher.acf.mail}">${teacher.acf.mail}</a>
+          </article>
+        `
+    );
+  }
 }
-
